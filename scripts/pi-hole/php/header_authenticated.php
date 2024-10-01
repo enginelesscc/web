@@ -41,7 +41,7 @@ function getMemUsage()
 {
     $data = explode("\n", file_get_contents('/proc/meminfo'));
     $meminfo = array();
-    if (count($data) > 0) {
+    if (count($data) >= 4) {
         foreach ($data as $line) {
             $expl = explode(':', $line);
             if (count($expl) == 2) {
@@ -50,7 +50,7 @@ function getMemUsage()
             }
         }
         $memused = $meminfo['MemTotal'] - $meminfo['MemFree'] - $meminfo['Buffers'] - $meminfo['Cached'];
-        $memusage = $memused / $meminfo['MemTotal'];
+        $memusage = $memused / max(1, $meminfo['MemTotal']);
     } else {
         $memusage = -1;
     }
